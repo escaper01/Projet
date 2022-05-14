@@ -4,19 +4,19 @@ import email
 from django.db import models
 from django.contrib.auth.models import User
 
-class Etudiant(models.Model):
-    nom = models.CharField(max_length=20 , blank=False)
-    prenom = models.CharField(max_length=20 , blank=False)
-    email = models.EmailField(max_length=100 , blank=False)
-    phone = models.IntegerField(blank=False)
-    age = models.IntegerField(blank=False)
-    password= models.CharField(max_length=190 , blank=False)
-    confirm_password= models.CharField(max_length=190 , blank=False)
-    pays = models.CharField(max_length=70 , blank=False)
-    date_created = models.DateTimeField(auto_now_add=True ,blank=True)
-    #speciality = models.CharField(max_length=190,blank=False,choices=STATUS)
-    def __str__(self):
-        return self.nom
+# class Etudiant(models.Model):
+#     nom = models.CharField(max_length=20 , blank=False)
+#     prenom = models.CharField(max_length=20 , blank=False)
+#     email = models.EmailField(max_length=100 , blank=False)
+#     phone = models.IntegerField(blank=False)
+#     age = models.IntegerField(blank=False)
+#     password= models.CharField(max_length=190 , blank=False)
+#     confirm_password= models.CharField(max_length=190 , blank=False)
+#     pays = models.CharField(max_length=70 , blank=False)
+#     date_created = models.DateTimeField(auto_now_add=True ,blank=True)
+#     #speciality = models.CharField(max_length=190,blank=False,choices=STATUS)
+#     def __str__(self):
+#         return self.nom
         
 
 class Image(models.Model):
@@ -57,6 +57,7 @@ class StudentExtra(models.Model):
     matiere=models.CharField(max_length=40,choices=classes)
     password=models.CharField(max_length=50)
     status=models.BooleanField(default=False)
+    image = models.FilePathField(path='C:\\Users\\escaper\\OneDrive\\Bureau\\projects\\face detection\\Projet\\InscriptionEtudiant\\Attendance database',recursive=True)
     @property
     def get_name(self):
         return self.user.first_name+" "+self.user.last_name

@@ -37,6 +37,6 @@ urlpatterns = [
     path('logout', LogoutView.as_view(template_name='InscriptionEtudiant/index.html'),name='logout'),
     path('Attendance', views.take_attendance, name='take_attendance'),
     path('video', views.video_cap, name='video_cap'),
-    # path('save_capture', views.save_capture, name='save_capture'),
+    path('capture', views.capture, name='capture'),
 
 ]

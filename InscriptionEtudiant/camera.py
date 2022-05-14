@@ -5,27 +5,27 @@ import numpy as np
 from datetime import datetime, date
 from datetimerange import DateTimeRange
 
-path = os.getcwd()
-print(path)
-print(os.listdir())
-from imutils import paths
+# path = os.getcwd()
+# print(path)
+# print(os.listdir())
+# from imutils import paths
 
-file_name = "InscriptionEtudiant\Attendance database"
-paths = os.listdir(file_name)
-print(paths)
-print("Load faces .....")
-faces = []
-faces_label = []
-for name in paths:
-    for filename in os.listdir(f'{file_name}/{name}'):
-        image = face_recognition.load_image_file(f'{file_name}/{name}/{filename}')
-        encoding = face_recognition.face_encodings(image)[0]
-        if len(encoding) > 0:
-            faces.append(encoding)
-            faces_label.append(name)
-face_locations = []
-face_encodings = []
-face_names = []
+# file_name = "InscriptionEtudiant\Attendance database"
+# paths = os.listdir(file_name)
+# print(paths)
+# print("Load faces .....")
+# faces = []
+# faces_label = []
+# for name in paths:
+#     for filename in os.listdir(f'{file_name}/{name}'):
+#         image = face_recognition.load_image_file(f'{file_name}/{name}/{filename}')
+#         encoding = face_recognition.face_encodings(image)[0]
+#         if len(encoding) > 0:
+#             faces.append(encoding)
+#             faces_label.append(name)
+# face_locations = []
+# face_encodings = []
+# face_names = []
 
 def attendance(name):
     # Opening the CSV file
