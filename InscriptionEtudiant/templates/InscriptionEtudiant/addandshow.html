@@ -1,0 +1,107 @@
+{% extends 'InscriptionEtudiant/base.html' %}
+{% block content %}
+
+
+<div class="row">
+  <div class="col-sm-4">
+    <h4 class="text-center alert alert alert-info">Ajouter un nouveau etudiant</h4>
+    <form action="" method="POST">
+      {% csrf_token %}
+      {{form.as_p}}
+    <input type="submit" class="btn btn-success" value= "Ajouter" >
+    
+    
+    
+    
+    </form>
+  </div>
+  <div class="col-sm-8">
+    <h4 class="text-center alert alert alert-info">Montrer les informations de l'étudiant</h4>
+    {% if stu %}
+    <table class="table table-hover" >
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Prenom</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Age</th>
+          <th scope="col">Password</th>
+          <th scope="col">Confirm_password</th>
+          <th scope="col">Pays</th>
+          <th scope="col">Action</th>
+
+
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for st in stu%}
+        <tr>
+          <th scope="row">{{st.id}}</th>
+          <td>{{st.nom}}</td>
+          <td>{{st.prenom}}</td>
+          <td>{{st.email}}</td>
+          <td>{{st.phone}}</td>
+          <td>{{st.age}}</td>
+          <td>{{st.password}}</td>
+          <td>{{st.confirme_password}}</td>
+          <td>{{st.pays}}</td>
+          <td>
+            <a href="{% url 'updatedata' st.id %}" class="btn btn-warning btn-sm">Modifier</a><br>
+            <form  action="{% url 'deletedata' st.id %}" method="post" class="d-inline" >
+              {% csrf_token %}
+              <input type="submit" class="btn btn-danger" value="Supprimer">
+            </form>
+          </td>
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+    
+    <h4 class="text-center alert alert alert-warning">Pas d'enregistrements</h4>
+
+    {% endif %}
+  </div>
+</div>
+
+{% comment %} <div class="container">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">nom</th>
+            <th scope="col">prenom</th>
+            <th scope="col">email</th>
+            <th scope="col">phone</th>
+            <th scope="col">age</th>
+            <th scope="col">password</th>
+            <th scope="col">confirm_password</th>
+            <th scope="col">pays</th>
+            <th scope="col">date_created</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for item in Etudiant %}
+          <tr>
+            <td>{{item.nom}}</td>
+            <td>{{item.prenom}}</td>
+            <td>{{item.email}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{item.age}}</td>
+            <td>{{item.password}}</td>
+            <td>{{item.confirm_password}}</td>
+            <td>{{item.pays}}</td>
+            <td>{{item.date_created}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+</div> {% endcomment %}
+
+
+
+
+{% endblock content %}

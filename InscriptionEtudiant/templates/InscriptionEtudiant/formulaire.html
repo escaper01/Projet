@@ -1,0 +1,56 @@
+{% extends 'InscriptionEtudiant/base.html' %}
+{% block content %}
+
+{% load static %}
+
+
+<h2>Register Here</h2><br>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.nom.label}}
+    {{form.nom}}<br><br>
+   
+    {{form.prenom.label}}
+    {{form.prenom}}<br><br> 
+    
+    {{form.email.label}}
+    {{form.email}}<br><br>
+
+    
+    {{form.phone.label}}
+    {{form.phone}}<br><br>
+
+    {{form.age.label}}
+    {{form.age}}<br><br>
+    {{form.password.label}}<input type="password" name="password"></input><br><br>
+    <!-- {{form.password.label}} -->
+    <br><br>
+    
+    <!-- {% comment %} <input type="password" name="password"></input><br><br> {% endcomment %} -->
+    {{form.confirm_password.label}}
+    {{form.confirm_password}}<br><br>
+    {{form.pays.label}}
+    {{form.pays}}<br><br>
+
+
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <div class="g-recaptcha" data-sitekey="6Lf4T3UfAAAAAJ6iqQM-frhLKym2SqPWEoFGLeiA"></div>
+<br><br>
+  
+<br><br>
+<button type="submit">Sign Up</button>   
+<br>
+ {{form.errors}} 
+ {% comment %} permet d'afficher les erreurs dans les champs  {% endcomment %}
+<br>
+<a href = "{% url 'authen' %}">Connexion page</a>  
+
+{% include 'InscriptionEtudiant/index.html' %}
+
+</form>
+{% endblock %}
+
+
+
+
