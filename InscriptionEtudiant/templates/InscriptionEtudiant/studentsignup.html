@@ -77,39 +77,76 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  {% render_field form1.first_name class="form-control" placeholder="First Name" %}
+                  {% render_field form.form1.first_name class="form-control" placeholder="First Name" %}
                 </div>
                 <div class="form-group">
-                  {% render_field form1.username class="form-control" placeholder="Username" id="username" %}
+                  {% render_field form.form1.username class="form-control" placeholder="Username" id="username" %}
                 </div>
                 <div class="form-group">
-                  {% render_field form2.matiere class="form-control" placeholder="Choose material" %}
+                  {% render_field form.form2.matiere class="form-control" placeholder="Choose material" %}
                 </div>
                 <div class="form-group">
-                  {% render_field form2.mobile class="form-control" placeholder="Phone number" %}
+                  {% render_field form.form2.mobile class="form-control" placeholder="Phone number" %}
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  {% render_field form1.last_name class="form-control" placeholder="Last Name" %}
+                  {% render_field form.form1.last_name class="form-control" placeholder="Last Name" %}
                 </div>
                 <div class="form-group">
-                  {% render_field form1.password class="form-control" type="password" placeholder="Password" %}
+                  {% render_field form.form1.password class="form-control" type="password" placeholder="Password" %}
                 </div>
                 <div class="form-group">
-                  {% render_field form2.email class="form-control" placeholder="Email" %}
+                  {% render_field form.form1.email class="form-control" placeholder="Email" %}
                 </div>
                 <div class="form-group">
-                  {% render_field form2.age class="form-control" placeholder="Age" %}
+                  {% render_field form.form2.age class="form-control" placeholder="Age" %}
                 </div>
               </div>
             </div>
-            <div id="container" id>
-              <img src="{% url 'video_cap' %}" />
+            <script>
+              function timer(){
+                seconds_elem = document.getElementById("seconds")
+                let seconds = 6
+                my_timer = setInterval(() => {
+                  if (seconds === 1){
+                    clearInterval(my_timer)
+                    document.getElementById("my_stream").setAttribute("src","")
+                  }
+                  seconds_elem.innerHTML = seconds--;
+                },1000)
+
+              }
+              function toggleStream(){
+                let stream_url = "{% url 'video_cap'  %}"
+                
+                
+                camStream = document.getElementById("my_stream")
+                current_url = camStream.getAttribute('src')
+                if (current_url === ""){
+                  let _username = document.getElementById('username').value
+                  document.cookie = `username=${_username}`;
+                  camStream.setAttribute('src',stream_url)
+                  timer()
+                }
+                else{
+                  camStream.setAttribute('src',"")
+                }
+              }
+            
+            
+            </script>
+            <div id="container">
               <div>
+                <button class="button button2" id="startCam" onclick="toggleStream()">
+                  Start Camera 
+                </button>
+                <span id="seconds">6</span>
                 <button class="button button2" id="capture">Shoot</button>
               </div>
+              <img src="" id="my_stream" />
             </div>
+            
           </div>
           <button type="submit" class="btnSubmit">Take Admission</button>
           <div class="text-center">
@@ -124,11 +161,8 @@
 </html>
 
 
-
+<!-- 
 <script>
-
-  
-
 
   $("#capture").click(function (e) {
     e.preventDefault()
@@ -136,11 +170,12 @@
 
     $.ajax({
       dataType: 'json',
-      type: "POST",
-      url: "{% url 'capture' %}",
+      type: "GET",
+      url: "{% url 'video_cap' %}",
       data: {
         'csrfmiddlewaretoken': "{{ csrf_token }}" ,
-         'name': _username
+         'name': _username,
+         'shoot':'just_do_it'
       },
       success : function(response){
         console.log("was sent")
@@ -148,4 +183,4 @@
       
     });
   });
-</script>
+</script> -->
