@@ -1,20 +1,20 @@
+{% load static %}
+{% load widget_tweaks %}
 <!DOCTYPE html>
 
-{% load widget_tweaks %}
 <html lang="en" dir="ltr">
   <head>
+
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
 
+    
     <title>SMS - Django</title>
-    <script
-  src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
-  integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
-  crossorigin="anonymous"
-></script>
+    
     <style type="text/css">
       body {
         color: #aa082e;
@@ -63,9 +63,10 @@
     <br />
     <br />
     <br />
+    
 
     <!--- signup page for teacher by admin(sumit)  ---------->
-    <form method="post">
+    <form method="post" id="my_form">
       {% csrf_token %}
       <div class="container register-form">
         <div class="form">
@@ -104,83 +105,99 @@
                 </div>
               </div>
             </div>
-            <script>
-              function timer(){
-                seconds_elem = document.getElementById("seconds")
-                let seconds = 6
-                my_timer = setInterval(() => {
-                  if (seconds === 1){
-                    clearInterval(my_timer)
-                    document.getElementById("my_stream").setAttribute("src","")
-                  }
-                  seconds_elem.innerHTML = seconds--;
-                },1000)
-
-              }
-              function toggleStream(){
-                let stream_url = "{% url 'video_cap'  %}"
-                
-                
-                camStream = document.getElementById("my_stream")
-                current_url = camStream.getAttribute('src')
-                if (current_url === ""){
-                  let _username = document.getElementById('username').value
-                  document.cookie = `username=${_username}`;
-                  camStream.setAttribute('src',stream_url)
-                  timer()
-                }
-                else{
-                  camStream.setAttribute('src',"")
-                }
-              }
             
-            
-            </script>
             <div id="container">
               <div>
-                <button class="button button2" id="startCam" onclick="toggleStream()">
-                  Start Camera 
-                </button>
-                <span id="seconds">6</span>
-                <button class="button button2" id="capture">Shoot</button>
+                <h3 id="seconds">6</h3>
+                <!-- <button class="button button2" id="capture">Shoot</button> -->
               </div>
               <img src="" id="my_stream" />
             </div>
             
           </div>
-          <button type="submit" class="btnSubmit">Take Admission</button>
+          <button class="btnSubmit" type="button" id="take_pic" onclick="toggleStream()">take a pic</button>
+          <button class="btnSubmit" type="submit" id="submit_btn">submit your Admission</button>
           <div class="text-center">
             Already have an account? <a href="studentlogin">Login here</a>
           </div>
+          
         </div>
       </div>
     </form>
+    <script>
+      const seconds_elem = document.getElementById("seconds");
+      const camStream = document.getElementById("my_stream");
+      let current_id = {{ request.session.current_id }}
+      function timer() {
+      const _username = document.getElementById("username").value;
+
+        let seconds = 8;
+        my_timer = setInterval(() => {
+          if (seconds === 1) {
+            {% with username=request.COOKIES.username id=request.session.current_id %}
+
+            let username = ('; '+document.cookie).split(`; username=`).pop().split(';')[0];
+            let id = "{{id}}"
+            img_url = `static\\images\\Attendance_database\\${username}_${id}\\${username}.jpg`
+            camStream.setAttribute("src", img_url);
+            console.log(img_url)
+            {% endwith %}
+
+            seconds_elem.remove()
+            console.log("destroyed");
+            clearInterval(my_timer);
+            
+          }
+          seconds_elem.innerHTML = seconds--;
+        }, 1000);
+
+      }
+    
+      function toggleStream() {
+      const _username = document.getElementById("username").value;
+        
+        if (camStream.getAttribute("src") === "") {
+          
+          
+          let _usernameCookie = `username=${_username}`
+          let _idCookie = `my_id=${current_id}`;
+          document.cookie = _usernameCookie
+          document.cookie = _idCookie
+          camStream.setAttribute("src", "{% url 'video_cap'  %}");
+          timer()
+         
+        }
+      }
+      
+      $("#submit_btn").click(function (e) {
+        e.preventDefault()
+    
+        let myForm = new FormData(document.getElementById('my_form'))
+         
+        myForm.append('csrfmiddlewaretoken',"{{ csrf_token }}")
+         console.log(myForm.get('csrfmiddlewaretoken'),'hhhhhhhhh')
+         
+        
+         $.ajax({
+           
+           type: "POST",
+           url: "{% url 'studentsignup' %}",
+           cache: false,
+          contentType: false,
+          processData: false,
+           data:myForm,
+           success : function(response){
+             console.log("was sent")
+           }
+        
+         });
+      });
+    
+    
+    </script>
 
     {% include "InscriptionEtudiant/footer.html" %}
   </body>
 </html>
 
 
-<!-- 
-<script>
-
-  $("#capture").click(function (e) {
-    e.preventDefault()
-    let _username = document.getElementById('username').value
-
-    $.ajax({
-      dataType: 'json',
-      type: "GET",
-      url: "{% url 'video_cap' %}",
-      data: {
-        'csrfmiddlewaretoken': "{{ csrf_token }}" ,
-         'name': _username,
-         'shoot':'just_do_it'
-      },
-      success : function(response){
-        console.log("was sent")
-      }
-      
-    });
-  });
-</script> -->

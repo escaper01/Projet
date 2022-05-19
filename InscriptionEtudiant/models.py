@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import os
 
 
 class Image(models.Model):
@@ -21,7 +22,7 @@ class StudentExtra(models.Model):
     mobile=models.CharField(max_length=13)
     age=models.PositiveIntegerField(null=True)
     matiere=models.CharField(max_length=40,choices=classes)
-    image = models.FilePathField(path='C:\\Users\\escaper\\OneDrive\\Bureau\\projects\\face detection\\Projet\\InscriptionEtudiant\\Attendance database',recursive=True, null=True, blank=True)
+    image = models.FilePathField(path=f"{os.getcwd()}\\InscriptionEtudiant\\static\\images\\Attendance_database\\",recursive=True, null=True, blank=True)
     @property
     def get_name(self):
         return self.user.first_name+" "+self.user.last_name

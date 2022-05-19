@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.core.files import File
 from .models import StudentExtra
-from cv.agent import VideoCamera
+from .agent import VideoCamera
 from .models import *
 from .forms import *
 import os
@@ -64,6 +64,8 @@ def admin_signup_view(request):
 
 
 def student_signup_view(request):
+    request.session['current_id'] = User.objects.last().id + 1
+
     form1 = AdminSigupForm()
     form2 = StudentUserForm()
     all_forms = {
@@ -71,21 +73,22 @@ def student_signup_view(request):
         'form2': form2,
     }
 
+
     if request.POST:
         v_form1 = AdminSigupForm(request.POST)
+        
         if v_form1.is_valid():
             current_user = v_form1.save()
+            current_student = StudentExtra.objects.get(id=current_user.id)
+           
+            current_student.mobile = request.POST.get('mobile')
+            current_student.age = request.POST.get('age')
+            current_student.matiere = request.POST.get('matiere')
+            current_student.image = f"{os.getcwd()}\InscriptionEtudiant\static\images\Attendance_database\{current_user.username}_{current_user.id}\{current_user.username}.jpg"
+            current_student.save()
 
-        # print(request.POST)
-        current_student = StudentExtra.objects.get(id=current_user.id)
-
-        current_student.mobile = request.POST.get('mobile')
-        current_student.age = request.POST.get('age')
-        current_student.matiere = request.POST.get('matiere')
-        current_student.save()
-        
             
-        return HttpResponseRedirect('studentlogin')
+        # return HttpResponseRedirect('studentlogin')
     return render(request,'InscriptionEtudiant/studentsignup.html',context={'form': all_forms})
 
 
@@ -142,12 +145,12 @@ def teacher_signup_view(request):
 
 
 
-def sign_in_gen(camera, username):
+def sign_in_gen(camera, username,id):
     start = time.time()
     while True:
         sec_diff = int(time.time() - start)
-        if sec_diff == 4:
-            camera.shoot(username)
+        if sec_diff == 6:
+            camera.shoot(username,id)
             break
         frame = camera.cam_stream()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
@@ -155,19 +158,7 @@ def sign_in_gen(camera, username):
 
 def video_cap(request):
     cam = VideoCamera()
-    username = request.COOKIES.get('username') 
-    return StreamingHttpResponse(sign_in_gen(camera=cam,username= username),content_type='multipart/x-mixed-replace; boundary=frame')
+    username = request.COOKIES.get('username')
+    id = request.COOKIES.get('my_id')
 
-        
-
-# def capture(request):
-#     username = request.POST.get('name')
-#     shoot = request.POST.get('shoot')
-#     data = dict()
-#     if username and shoot:
-#         data['username'] = username
-#         data['shoot'] = True
-    
-#     return JsonResponse(data)
-
-
+    return StreamingHttpResponse(sign_in_gen(cam,username,id),content_type='multipart/x-mixed-replace; boundary=frame')

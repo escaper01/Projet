@@ -122,13 +122,13 @@ class VideoCamera:
             ret, jpeg = cv2.imencode('.jpg', frame)
             return jpeg.tobytes()
 
-    def shoot(self,username):
+    def shoot(self,username,id):
         # create the folder if not exists
-        image_path = f"{os.getcwd()}\InscriptionEtudiant\Attendance database\{username}"
+        image_path = f"{os.getcwd()}\InscriptionEtudiant\static\images\Attendance_database\{username}_{id}"
         if not os.path.isdir(image_path):
             os.mkdir(image_path)
 
-        image_path = f"{os.getcwd()}\InscriptionEtudiant\Attendance database\{username}\{username}.jpg"
+        image_path = f"{os.getcwd()}\InscriptionEtudiant\static\images\Attendance_database\{username}_{id}\{username}.jpg"
         image_path = image_path.replace("\\","\\\\")
         return_value, image = self.video_capture.read()
         cv2.imwrite(image_path, image)
